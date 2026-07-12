@@ -21,18 +21,27 @@ let maxBoundry = 100;
 export default function GameScreen({ userNumber }: { userNumber: number }) {
   const initial = generateRandomNumber(1, 100, userNumber);
   const [currentGuess, setCurrentGuess] = useState(initial);
+  const [rounds , setRounds] = useState(1)
   const router = useRouter();
+
+  useEffect(() => {
+    minBoundry = 1
+    maxBoundry = 100
+  }, [])
+  
 
   useEffect(() => {
     if (currentGuess === userNumber) {
       router.replace({
-        pathname: "/game",
+        pathname: "/gameOver",
         params: {
           userNumber: String(userNumber),
+          rounds:String(rounds),
         },
       });
     }
-  }, [currentGuess, userNumber, router]);
+  }, [currentGuess, userNumber, router , rounds , setRounds]);
+
 
   const handleRandomNumber = (direction: string) => {
     if (
@@ -45,7 +54,7 @@ export default function GameScreen({ userNumber }: { userNumber: number }) {
       return;
     }
     if (direction === "lower") {
-      maxBoundry = currentGuess;
+      maxBoundry = currentGuess - 1;
     } else {
       minBoundry = currentGuess + 1;
     }
@@ -55,6 +64,7 @@ export default function GameScreen({ userNumber }: { userNumber: number }) {
       currentGuess,
     );
     setCurrentGuess(correctAnswer);
+    setRounds((prev)=> prev + 1)
   };
 
   return (
@@ -84,7 +94,7 @@ export default function GameScreen({ userNumber }: { userNumber: number }) {
             }}
             style={tw`bg-red-500 px-8 py-4 rounded-xl mr-4`}
           >
-            <Ionicons name="remove-circle-outline" color={"gray"} />
+            <Ionicons name="remove-circle-outline" size={26} color={"white"} />
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -93,7 +103,7 @@ export default function GameScreen({ userNumber }: { userNumber: number }) {
             }}
             style={tw`bg-green-500 px-8 py-4 rounded-xl ml-4`}
           >
-            <Ionicons name="pulse-outline" color={"gray"} />
+            <Ionicons name="add-circle-outline" size={26} color={"white"} />
           </TouchableOpacity>
         </View>
       </View>

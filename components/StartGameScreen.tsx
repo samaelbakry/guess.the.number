@@ -1,10 +1,12 @@
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
 import tw from "twrnc";
-import GameScreen from "./GameScreen";
 
 export default function StartGameScreen() {
   const [inputValue, setInputValue] = useState("");
+  const router = useRouter();
+
 
   const handleInputValue = (value: string) => {
     setInputValue(value);
@@ -14,14 +16,19 @@ export default function StartGameScreen() {
     if (isNaN(chossenNumber) || chossenNumber < 1 || chossenNumber > 99){
       return Alert.alert("please enter a number between 1 and 99 ");
     } else {
-     return <GameScreen userNumber={chossenNumber}/>
+      router.replace({
+        pathname:"/startGame",
+        params:{
+          userNumber:String(chossenNumber),
+        }
+      })
     }
   }
 
   const handleReset = () => {
     setInputValue("")
   };
-  
+
   return (
     <View style={tw`bg-white rounded-3xl p-6 mx-6 mt-20 shadow-lg`}>
       <Text style={tw`text-2xl font-bold text-center mb-6`}>
